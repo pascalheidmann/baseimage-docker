@@ -14,4 +14,3 @@ ENV DEBIAN_FRONTEND="teletype" \
     LC_ALL="en_US.UTF-8"
 
 CMD ["/sbin/my_init"]
-#ENTRYPOINT ['/sbin/my_init', '--']
