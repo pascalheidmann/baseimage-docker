@@ -115,9 +115,9 @@ def export_envvars(to_dir=True):
                 with open("/etc/container_environment/" + name, "w+") as f:
                     f.write(value)
                     f.close()
+                os.chmod("/etc/container_environment/" + name, 0o777)
             except PermissionError:
                 print("could not write '/etc/container_environment/'" + name)
-            os.chmod("/etc/container_environment/" + name, 0o777)
         shell_dump += "export " + sanitize_shenvname(name) + "=" + shquote(value) + "\n"
     with open("/etc/container_environment.sh", "w+") as f:
         f.write(shell_dump)
