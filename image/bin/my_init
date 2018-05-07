@@ -115,19 +115,35 @@ def export_envvars(to_dir=True):
                 with open("/etc/container_environment/" + name, "w+") as f:
                     f.write(value)
                     f.close()
+            except PermissionError:
+                print("could not write /etc/container_environment/" + name)
+            try:
                 os.chmod("/etc/container_environment/" + name, 0o777)
             except PermissionError:
-                print("could not write '/etc/container_environment/'" + name)
+                print("chmod failed")
         shell_dump += "export " + sanitize_shenvname(name) + "=" + shquote(value) + "\n"
-    with open("/etc/container_environment.sh", "w+") as f:
-        f.write(shell_dump)
-        f.close()
-    os.chmod("/etc/container_environment.sh", 0o777)
 
-    with open("/etc/container_environment.json", "w+") as f:
-        f.write(json.dumps(dict(os.environ)))
-        f.close()
-    os.chmod("/etc/container_environment.json", 0o777)
+    try:
+        with open("/etc/container_environment.sh", "w+") as f:
+            f.write(shell_dump)
+            f.close()
+    except PermissionError:
+        print("could not write /etc/container_environment.sh")
+    try:
+        os.chm  od("/etc/container_environment.sh", 0o777)
+    except PermissionError:
+        print("chmod failed")
+
+    try:
+        with open("/etc/container_environment.json", "w+") as f:
+            f.write(json.dumps(dict(os.environ)))
+            f.close()
+    except PermissionError:
+        print("could not write /etc/container_environment.json")
+    try:
+        os.chmod("/etc/container_environment.json", 0o777)
+    except PermissionError:
+        print("chmod failed")
 
 
 def shquote(s):
