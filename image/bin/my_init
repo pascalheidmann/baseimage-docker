@@ -94,6 +94,7 @@ def import_envvars(clear_existing_environment=True, override_existing_environmen
             # don't want to include in the env variable value. See
             # https://github.com/phusion/baseimage-docker/pull/49
             value = re.sub('\n\Z', '', f.read())
+            f.close()
         new_env[name] = value
     if clear_existing_environment:
         os.environ.clear()
@@ -112,14 +113,17 @@ def export_envvars(to_dir=True):
         if to_dir:
             with open("/etc/container_environment/" + name, "w+") as f:
                 f.write(value)
+                f.close()
             os.chmod("/etc/container_environment/" + name, 0o777)
         shell_dump += "export " + sanitize_shenvname(name) + "=" + shquote(value) + "\n"
     with open("/etc/container_environment.sh", "w+") as f:
         f.write(shell_dump)
+        f.close()
     os.chmod("/etc/container_environment.sh", 0o777)
 
     with open("/etc/container_environment.json", "w+") as f:
         f.write(json.dumps(dict(os.environ)))
+        f.close()
     os.chmod("/etc/container_environment.json", 0o777)
 
 
