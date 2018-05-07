@@ -130,7 +130,7 @@ def export_envvars(to_dir=True):
     except PermissionError:
         print("could not write /etc/container_environment.sh")
     try:
-        os.chm  od("/etc/container_environment.sh", 0o777)
+        os.chmod("/etc/container_environment.sh", 0o777)
     except PermissionError:
         print("chmod failed")
 
