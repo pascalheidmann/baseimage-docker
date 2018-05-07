@@ -111,9 +111,12 @@ def export_envvars(to_dir=True):
         if name in ['HOME', 'USER', 'GROUP', 'UID', 'GID', 'SHELL']:
             continue
         if to_dir:
-            with open("/etc/container_environment/" + name, "w+") as f:
-                f.write(value)
-                f.close()
+            try:
+                with open("/etc/container_environment/" + name, "w+") as f:
+                    f.write(value)
+                    f.close()
+            except PermissionError:
+                print("could not write '/etc/container_environment/'" + name)
             os.chmod("/etc/container_environment/" + name, 0o777)
         shell_dump += "export " + sanitize_shenvname(name) + "=" + shquote(value) + "\n"
     with open("/etc/container_environment.sh", "w+") as f:
